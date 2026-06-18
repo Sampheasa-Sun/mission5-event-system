@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # SERVER 01 & 03: Your Spring Boot Application
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres_db:5432/mission5
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=123123123
+      - REDIS_HOST=redis_cache
+      - REDIS_PORT=6379
+    depends_on:
+      - postgres_db
+      - redis_cache
+    networks:
+      - mission_network
+
+  # SERVER 02: Redis Cache
+  redis_cache:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - mission_network
+
+  # SERVER 04: PostgreSQL Main Database
+  postgres_db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=mission5
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123123123
+    ports:
+      - "5432:5432"
+    networks:
+      - mission_network
+    volumes:
+      # This saves your data so it doesn't delete if the server restarts
+      - pgdata:/var/lib/postgresql/data
+      # This creates a folder on your server to hold the pgBadger logs!
+      - ./pg_logs:/var/log/postgresql
+    # These commands force Postgres to write the logs pgBadger needs
+    command: >
+      postgres 
+      -c logging_collector=on 
+      -c log_directory='/var/log/postgresql' 
+      -c log_filename='postgresql.log' 
+      -c log_statement='all' 
+      -c log_min_duration_statement=0 
+      -c log_line_prefix='%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h '
+
+networks:
+  mission_network:
+    driver: bridge
+
+volumes:
+  pgdata:
