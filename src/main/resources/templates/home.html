@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>UniEvents - University Event Announcement System</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: { extend: { colors: { primary: "#001e40", "primary-fixed": "#d5e3ff", "on-primary-fixed": "#001b3c", "surface-container-lowest": "#ffffff", "surface-container": "#e7eeff", "on-surface": "#111c2d", "on-surface-variant": "#43474f", "outline-variant": "#c3c6d1", "outline": "#737780", "primary-container": "#003366", "on-primary-container": "#799dd6" } } }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col">
+<header class="bg-white border-b border-slate-200 shadow-sm top-0 z-50 sticky">
+    <nav class="flex justify-between items-center w-full px-6 max-w-7xl mx-auto h-16">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#001e40] text-[28px]">school</span>
+            <a class="text-xl font-bold text-[#001e40] tracking-tight" href="/">UniEvents</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a th:href="@{/admin}" class="text-sm bg-[#001e40] text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-900 transition-colors">
+                Admin Login <span class="material-symbols-outlined text-[18px]">login</span>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<main class="flex-grow w-full px-6 max-w-7xl mx-auto py-12 flex flex-col gap-12">
+    <section class="flex flex-col items-center text-center max-w-3xl mx-auto gap-6">
+        <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-900 px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm">
+            <span class="material-symbols-outlined text-[16px]">bolt</span> Lightning Fast - Redis Cached
+        </div>
+        <h1 class="text-4xl font-bold text-[#001e40] tracking-tight leading-tight">Discover Academic Excellence</h1>
+        <p class="text-lg text-slate-600 max-w-2xl">Stay informed about upcoming lectures, workshops, seminars, and social gatherings.</p>
+    </section>
+
+    <section>
+        <div class="flex justify-between items-end mb-8 border-b border-slate-200 pb-4">
+            <h2 class="text-2xl font-bold text-[#001e40]">Upcoming Events</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <article th:each="event : ${events}" class="bg-white rounded-lg shadow border border-slate-200 hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="h-32 w-full bg-slate-100 relative overflow-hidden flex justify-center items-center">
+                    <span class="material-symbols-outlined text-6xl text-slate-300">event</span>
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded shadow-sm text-center border border-slate-200">
+                        <span class="block text-xs font-bold text-[#001e40] leading-none mb-1">DATE</span>
+                        <span class="block text-lg font-bold text-slate-900 leading-none" th:text="${event.eventDate}">24</span>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow gap-4">
+                    <h3 class="text-xl font-semibold text-slate-900 leading-snug group-hover:text-[#001e40]" th:text="${event.title}">Event Title</h3>
+                    <div class="mt-auto space-y-3">
+                        <div class="flex items-start gap-2 text-slate-600 text-sm">
+                            <span class="material-symbols-outlined text-[18px]">info</span>
+                            <span th:text="${event.description}">Event description...</span>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex justify-between items-center">
+                                <span class="inline-flex items-center bg-blue-50 text-blue-800 border border-blue-200 px-3 py-1 rounded-full text-xs font-semibold" th:text="${event.category != null ? event.category.name : 'General'}">
+                                    Category
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
+</body>
+</html>
